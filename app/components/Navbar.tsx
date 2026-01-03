@@ -1,0 +1,251 @@
+'use client';
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
+import { jwtDecode } from 'jwt-decode'; // Fixed import
+import { api } from '@/app/lib/api';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Menu, X, ChevronDown, Calendar, User, LayoutDashboard, LogOut } from "lucide-react";
+
+interface UserPayload {
+    userId: string;
+    role: string;
+    email: string;
+}
+
+interface UserData {
+    name: string;
+    email: string;
+    role: string;
+}
+
+export default function Navbar() {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userData, setUserData] = useState<UserData | null>(null);
+    const [scrolled, setScrolled] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const router = useRouter();
+
+    useEffect(() => {
+        const checkLogin = () => {
+            const token = Cookies.get('accessToken');
+            if (token) {
+                setIsLoggedIn(true);
+                try {
+                    const decoded = jwtDecode<UserPayload>(token);
+                    api.get(`/users/${decoded.userId}`)
+                    .then(res => {
+                        if (res.data.success) {
+                            setUserData(res.data.data);
+                        }
+                    })
+                    .catch(e => console.error(e));
+                } catch (e) { console.error(e); }
+            } else {
+                setIsLoggedIn(false);
+                setUserData(null);
+            }
+        };
+
+        checkLogin();
+        
+        // Listen for storage events (cross-tab) or custom events if needed
+        // For simple single-tab reactivity after login/logout, we can rely on path changes or a custom interval/event
+        const interval = setInterval(checkLogin, 1000); // Poll for cookie changes every second
+
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 20);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+             window.removeEventListener('scroll', handleScroll);
+             clearInterval(interval);
+        }
+    }, []);
+
+    const handleLogout = () => {
+        Cookies.remove('accessToken');
+        Cookies.remove('refreshToken');
+        setIsLoggedIn(false);
+        setUserData(null);
+        router.push('/login');
+    };
+
+    const getInitials = (name: string) => {
+        return name
+            ? name.split(' ').map((n) => n[0]).join('').toUpperCase().substring(0, 2)
+            : 'U';
+    };
+
+    const navLinks = [
+        { name: 'Home', href: '/' },
+        { name: 'Explore Events', href: '/events' },
+    ];
+
+    return (
+        <motion.nav 
+            className={cn(
+                "fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white",
+                scrolled ? "shadow-md py-2 border-b" : "py-4 border-b border-transparent"
+            )}
+            initial={{ y: -100 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.5 }}
+        >
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-between items-center">
+                    {/* Logo */}
+                    <Link href="/" className="flex items-center gap-2 group">
+                        <span className="font-extrabold text-2xl text-gray-900 tracking-tight group-hover:text-indigo-600 transition-colors">
+                            Adda<span className="group-hover:text-gray-900 text-indigo-600">Hub</span>
+                        </span>
+                    </Link>
+
+                    {/* Desktop Navigation */}
+                    <div className="hidden md:flex items-center space-x-8">
+                        {navLinks.map((link) => (
+                            <Link 
+                                key={link.name} 
+                                href={link.href} 
+                                className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors relative group"
+                            >
+                                {link.name}
+                                <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-indigo-600 transition-all group-hover:w-full" />
+                            </Link>
+                        ))}
+                        {isLoggedIn && (
+                             <Link 
+                                href="/dashboard" 
+                                className="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors relative group"
+                            >
+                                Dashboard
+                                <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-indigo-600 transition-all group-hover:w-full" />
+                            </Link>
+                        )}
+                    </div>
+
+                    {/* Auth & Actions */}
+                    <div className="hidden md:flex items-center space-x-4">
+                        {isLoggedIn ? (
+                             <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="relative h-10 w-10 rounded-full focus:ring-0">
+                                  <Avatar className="h-10 w-10 border-2 border-indigo-100 hover:border-indigo-200 transition-colors">
+                                    <AvatarImage src="" alt={userData?.name || "User"} />
+                                    <AvatarFallback className="bg-indigo-50 text-indigo-700 font-bold">
+                                        {userData ? getInitials(userData.name) : '...'}
+                                    </AvatarFallback>
+                                  </Avatar>
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent className="w-56" align="end" forceMount>
+                                <DropdownMenuLabel className="font-normal">
+                                  <div className="flex flex-col space-y-1">
+                                    <p className="text-sm font-medium leading-none">{userData?.name || 'User'}</p>
+                                    <p className="text-xs leading-none text-muted-foreground">
+                                      {userData?.email || '...'}
+                                    </p>
+                                  </div>
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={() => router.push('/dashboard')} className="cursor-pointer">
+                                  <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard
+                                </DropdownMenuItem>
+                                {(userData?.role === 'host' || userData?.role === 'admin') && (
+                                    <DropdownMenuItem onClick={() => router.push('/my-events')} className="cursor-pointer">
+                                        <Calendar className="mr-2 h-4 w-4" /> My Events
+                                    </DropdownMenuItem>
+                                )}
+                                <DropdownMenuItem onClick={() => router.push('/profile')} className="cursor-pointer">
+                                  <User className="mr-2 h-4 w-4" /> Profile
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:text-red-600 cursor-pointer">
+                                  <LogOut className="mr-2 h-4 w-4" /> Log out
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                        ) : (
+                            <div className="flex items-center space-x-3">
+                                <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors">
+                                    Log in
+                                </Link>
+                                <Button asChild className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">
+                                    <Link href="/register">Sign Up</Link>
+                                </Button>
+                            </div>
+                        )}
+                    </div>
+
+                     {/* Mobile Menu Button */}
+                    <div className="md:hidden">
+                        <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                        </Button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Mobile Menu */}
+             <AnimatePresence>
+                {mobileMenuOpen && (
+                    <motion.div 
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="md:hidden bg-white border-b overflow-hidden"
+                    >
+                        <div className="px-4 pt-2 pb-6 space-y-1">
+                            {navLinks.map((link) => (
+                                <Link 
+                                    key={link.name} 
+                                    href={link.href}
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                                >
+                                    {link.name}
+                                </Link>
+                            ))}
+                            <div className="pt-4 mt-4 border-t border-gray-100">
+                                {isLoggedIn ? (
+                                    <div className="space-y-2">
+                                        <div className="px-3 pb-2 text-sm text-gray-500">
+                                            Signed in as <br/> <span className="font-medium text-gray-900">{userData?.email}</span>
+                                        </div>
+                                        <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Dashboard</Link>
+                                        <Link href="/profile" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Profile</Link>
+                                        {(userData?.role === 'host' || userData?.role === 'admin') && (
+                                            <Link href="/my-events" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">My Events</Link>
+                                        )}
+                                         <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50">Logout</button>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-2 px-3">
+                                         <Button asChild className="w-full justify-center" variant="outline">
+                                            <Link href="/login" onClick={() => setMobileMenuOpen(false)}>Log in</Link>
+                                        </Button>
+                                        <Button asChild className="w-full justify-center bg-indigo-600 hover:bg-indigo-700">
+                                            <Link href="/register" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
+                                        </Button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </motion.nav>
+    );
+}
