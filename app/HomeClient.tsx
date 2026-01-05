@@ -56,7 +56,6 @@ export default function HomeClient() {
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      {/* 1. Hero Section */}
       <section className="relative py-20 lg:py-32 overflow-hidden">
         <div className="container px-4 md:px-6 mx-auto">
           <motion.div 
@@ -87,7 +86,6 @@ export default function HomeClient() {
         </div>
       </section>
 
-      {/* 2. Search & Filter Section */}
       <section className="py-12 bg-white border-y border-gray-100">
           <div className="container px-4 md:px-6 mx-auto">
               <motion.div 
@@ -122,7 +120,6 @@ export default function HomeClient() {
           </div>
       </section>
 
-      {/* 3. Featured Categories */}
       <section className="py-20 md:py-32 bg-gray-50">
         <div className="container px-4 md:px-6 mx-auto">
             <div className="text-center mb-16 space-y-4">
@@ -156,7 +153,6 @@ export default function HomeClient() {
         </div>
       </section>
 
-      {/* 4. Popular Events (Placeholder) */}
         <section className="py-20 bg-white">
             <div className="container px-4 md:px-6 mx-auto">
                  <div className="flex justify-between items-end mb-12">
@@ -168,7 +164,6 @@ export default function HomeClient() {
                  </div>
                  
                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                     {/* Dynamic Cards */}
                      {loading ? (
                         <div className="col-span-3 text-center text-gray-500 py-12">Loading popular events...</div>
                      ) : popularEvents.length > 0 ? (
@@ -210,9 +205,7 @@ export default function HomeClient() {
             </div>
         </section>
 
-      {/* 5. How It Works (NEW SECTION) */}
       <section id="how-it-works" className="py-24 bg-gradient-to-b from-indigo-50/50 to-white relative overflow-hidden">
-          {/* Decorative elements */}
           <div className="absolute top-0 left-0 w-64 h-64 bg-indigo-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
           <div className="absolute top-0 right-0 w-64 h-64 bg-pink-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
 
@@ -263,7 +256,6 @@ export default function HomeClient() {
           </div>
       </section>
 
-      {/* 6. Testimonials */}
       <section className="py-20 bg-indigo-900 text-white">
           <div className="container px-4 md:px-6 mx-auto text-center">
             <h2 className="text-3xl font-bold tracking-tight mb-16">Stories from our community</h2>
@@ -292,7 +284,6 @@ export default function HomeClient() {
           </div>
       </section>
 
-       {/* 7. FAQ Section */}
        <section className="py-20 bg-white">
            <div className="container px-4 md:px-6 mx-auto max-w-3xl">
                 <div className="text-center mb-12">
@@ -321,7 +312,6 @@ export default function HomeClient() {
            </div>
        </section>
 
-       {/* 8. CTA Section */}
        <section className="py-20 bg-gray-50 border-t border-gray-100">
           <div className="container px-4 md:px-6 mx-auto text-center">
              <div className="max-w-3xl mx-auto space-y-8">

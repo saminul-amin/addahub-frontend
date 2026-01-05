@@ -62,13 +62,11 @@ export default function DashboardClient() {
                 const decoded: any = jwtDecode(token);
                 const userId = decoded.userId;
 
-                // 1. Fetch User Profile
                 const userRes = await api.get(`/users/${userId}`);
                 if (userRes.data.success) {
                     const userData = userRes.data.data;
                     setUser(userData);
 
-                    // If Admin, fetch admin data
                     if (userData.role === 'admin') {
                         const usersRes = await api.get('/users');
                         if (usersRes.data.success) {
@@ -83,13 +81,10 @@ export default function DashboardClient() {
                     }
                 }
 
-                // 2. Fetch Joined Events
                 const joinedRes = await api.get(`/events?participants=${userId}`);
                 if (joinedRes.data.success) {
                     setJoinedEvents(joinedRes.data.data);
                 }
-
-                // 3. Fetch Hosted Events
                 const hostedRes = await api.get(`/events?organizer=${userId}`);
                 if (hostedRes.data.success) {
                     setHostedEvents(hostedRes.data.data);
@@ -155,7 +150,6 @@ export default function DashboardClient() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                {/* Profile Sidebar */}
                 <div className="lg:col-span-1">
                     <Card className="border-none shadow-md sticky top-24">
                         <CardHeader className="items-center text-center pb-2">
@@ -183,7 +177,6 @@ export default function DashboardClient() {
                     </Card>
                 </div>
 
-                {/* Main Content Areas */}
                 <div className="lg:col-span-3">
                     <Tabs defaultValue={user?.role === 'admin' ? "overview" : "joined"} className="space-y-6">
                         <TabsList className="bg-white p-1 rounded-lg border shadow-sm w-full md:w-auto grid grid-cols-3 md:flex flex-wrap h-auto">
@@ -199,7 +192,6 @@ export default function DashboardClient() {
                             <TabsTrigger value="hosting" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white rounded-md px-4 py-2">{user?.role === 'admin' ? "My Hosting" : "Hosting"}</TabsTrigger>
                         </TabsList>
                         
-                        {/* ADMIN: OVERVIEW */}
                         {user?.role === 'admin' && (
                             <TabsContent value="overview">
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -237,7 +229,6 @@ export default function DashboardClient() {
                             </TabsContent>
                         )}
 
-                        {/* ADMIN: USERS (Role = user) */}
                         {user?.role === 'admin' && (
                              <TabsContent value="users">
                                 <Card>
@@ -268,7 +259,6 @@ export default function DashboardClient() {
                             </TabsContent>
                         )}
 
-                        {/* ADMIN: HOSTS (Role = host) */}
                         {user?.role === 'admin' && (
                              <TabsContent value="hosts">
                                 <Card>
@@ -299,7 +289,6 @@ export default function DashboardClient() {
                             </TabsContent>
                         )}
 
-                         {/* ADMIN: EVENTS */}
                         {user?.role === 'admin' && (
                              <TabsContent value="manage_events">
                                 <Card>
@@ -334,7 +323,6 @@ export default function DashboardClient() {
                             </TabsContent>
                         )}
 
-                        {/* JOINED EVENTS */}
                         <TabsContent value="joined">
                              <Card className="border-none shadow-md">
                                 <CardHeader>
@@ -383,8 +371,7 @@ export default function DashboardClient() {
                                 </CardContent>
                             </Card>
                         </TabsContent>
-                        
-                        {/* HOSTED EVENTS */}
+
                         <TabsContent value="hosting">
                              <Card className="border-none shadow-md">
                                 <CardHeader>

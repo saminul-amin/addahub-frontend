@@ -32,33 +32,24 @@ interface Event {
 
 export default function EventDetailsClient() {
     const { id } = useParams();
-    const router = useRouter(); // Add router
+    const router = useRouter();
     const [event, setEvent] = useState<Event | null>(null);
     const [loading, setLoading] = useState(true);
     const [joining, setJoining] = useState(false);
-    
-    // Auth & User State
     const [userId, setUserId] = useState<string | null>(null);
     const [isParticipant, setIsParticipant] = useState(false);
-
-    // Review State
     const [reviews, setReviews] = useState<any[]>([]);
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState("");
     const [submittingReview, setSubmittingReview] = useState(false);
-    
-    // Derived state
     const hasReviewed = reviews.some(r => r.reviewer?._id === userId || r.reviewer === userId);
 
     useEffect(() => {
         const fetchEventAndReviews = async () => {
-             // 1. Fetch Event
             try {
                 const res = await api.get(`/events/${id}`);
                 if (res.data.success) {
                     setEvent(res.data.data);
-                    
-                    // Check participation
                     const token = Cookies.get('accessToken');
                     if (token) {
                          const decoded: any = jwtDecode(token);
@@ -73,8 +64,7 @@ export default function EventDetailsClient() {
                 setLoading(false);
             }
 
-            // 2. Fetch Reviews
-             try {
+            try {
                 const reviewRes = await api.get(`/reviews/event/${id}`);
                 if (reviewRes.data.success) {
                     setReviews(reviewRes.data.data);
@@ -100,37 +90,26 @@ export default function EventDetailsClient() {
             const userId = decoded.userId;
 
             if (isParticipant) {
-                // Leave
                 await api.delete(`/events/${id}/join`, { data: { userId } });
                 toast.success("Left Event", { description: "You have left the event." });
                 setEvent(prev => prev ? { ...prev, participants: prev.participants.filter(p => p !== userId && p._id !== userId) } : null);
                 setIsParticipant(false);
             } else {
-                // Join -> Redirect to Payment
                 if (!event) return;
                 
-                // If free event, maybe direct join? For now, let's assume all go through stripe or just paid ones.
-                // Assuming all through stripe for this task or paid ones.
-                // If price is 0, backend session create might fail if not handled, but let's assume paid events for now as per "Payment Integration".
-                // Actually, backend stripe logic handles unit_amount. If 0, stripe might complain or we should skip.
                 if (event.price === 0) {
-                     // Direct Join for Free events
-                     const res = await api.post(`/events/${id}/join`, { userId }); // Using old endpoint for free? 
-                     // Wait, I didn't update the old endpoint logic to preventing paid joins without payment.
-                     // But let's act as if this button handles the flow.
+                     const res = await api.post(`/events/${id}/join`, { userId }); 
                      if (res.data.success) {
                         toast.success("Joined!", { description: "You validly joined this free event." });
                         setEvent(prev => prev ? { ...prev, participants: [...prev.participants, { _id: userId }] } : null);
                         setIsParticipant(true);
                      }
                 } else {
-                    // Paid Event -> Stripe
                     const res = await api.post('/payments/create-checkout-session', {
                         eventId: id,
                         userId
                     });
                     if (res.data.success) {
-                        // Redirect to Stripe
                         window.location.href = res.data.data.url;
                     }
                 }
@@ -152,7 +131,6 @@ export default function EventDetailsClient() {
              if(!token) return toast.error("Please login");
              const decoded: any = jwtDecode(token as string);
 
-             // Prepare payload
              const payload = {
                  event: id,
                  reviewer: decoded.userId,
@@ -164,7 +142,6 @@ export default function EventDetailsClient() {
              if (res.data.success) {
                  toast.success("Review Submitted!");
                  
-                 // Fetch latest reviews to insure consistent state
                  const newReviewRes = await api.get(`/reviews/event/${id}`);
                  if(newReviewRes.data.success) {
                     setReviews(newReviewRes.data.data);
@@ -187,7 +164,6 @@ export default function EventDetailsClient() {
 
     return (
         <div className="bg-background min-h-screen pb-12">
-            {/* Hero Image / Banner */}
             <div className="h-[400px] w-full bg-gray-200 relative overflow-hidden">
 
                  {event.image ? (
@@ -217,7 +193,6 @@ export default function EventDetailsClient() {
 
             <div className="container mx-auto px-4 md:px-6 py-12 max-w-5xl">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                    {/* Main Content */}
                     <div className="lg:col-span-2 space-y-8">
                         <div>
                             <h2 className="text-2xl font-bold mb-4">About this event</h2>
@@ -252,11 +227,9 @@ export default function EventDetailsClient() {
                              </div>
                         </div>
 
-                        {/* REVIEWS SECTION */}
                         <div className="pt-8 border-t">
                             <h2 className="text-2xl font-bold mb-6">Reviews ({reviews.length})</h2>
-                            
-                            {/* Review Form */}
+
                             {userId && userId !== event.organizer?._id && !hasReviewed && (
                                 <Card className="mb-8 border-dashed border-2">
                                     <CardHeader>
@@ -287,8 +260,7 @@ export default function EventDetailsClient() {
                                     </CardContent>
                                 </Card>
                             )}
-                            
-                            {/* Review List */}
+
                             <div className="space-y-4">
                                 {reviews.map((review: any) => (
                                     <Card key={review._id}>
@@ -324,7 +296,6 @@ export default function EventDetailsClient() {
                         </div>
                     </div>
 
-                    {/* Sidebar */}
                     <div className="space-y-6">
                         <div className="border rounded-xl shadow-sm bg-card p-6 space-y-6 sticky top-24">
                             <div className="space-y-4">

@@ -6,7 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { jwtDecode } from 'jwt-decode'; // Fixed import
+import { jwtDecode } from 'jwt-decode';
 import { api } from '@/app/lib/api';
 import {
   DropdownMenu,
@@ -62,9 +62,8 @@ export default function Navbar() {
 
         checkLogin();
         
-        // Listen for storage events (cross-tab) or custom events if needed
-        // For simple single-tab reactivity after login/logout, we can rely on path changes or a custom interval/event
-        const interval = setInterval(checkLogin, 1000); // Poll for cookie changes every second
+        
+        const interval = setInterval(checkLogin, 1000);
 
         const handleScroll = () => {
             setScrolled(window.scrollY > 20);
@@ -112,14 +111,12 @@ export default function Navbar() {
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center">
-                    {/* Logo */}
                     <Link href="/" className="flex items-center gap-2 group">
                         <span className="font-extrabold text-2xl text-gray-900 tracking-tight group-hover:text-indigo-600 transition-colors">
                             Adda<span className="group-hover:text-gray-900 text-indigo-600">Hub</span>
                         </span>
                     </Link>
 
-                    {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center space-x-8">
                         {navLinks.map((link) => (
                             <Link 
@@ -171,7 +168,6 @@ export default function Navbar() {
                         )}
                     </div>
 
-                    {/* Auth & Actions */}
                     <div className="hidden md:flex items-center space-x-4">
                         {isLoggedIn ? (
                              <DropdownMenu>
@@ -222,7 +218,6 @@ export default function Navbar() {
                         )}
                     </div>
 
-                     {/* Mobile Menu Button */}
                     <div className="md:hidden">
                         <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
                             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -231,7 +226,6 @@ export default function Navbar() {
                 </div>
             </div>
 
-            {/* Mobile Menu */}
              <AnimatePresence>
                 {mobileMenuOpen && (
                     <motion.div 

@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 export const api = axios.create({
-    baseURL: 'http://localhost:5000/api/v1',
+    baseURL: 'https://addahub-backend.vercel.app/api/v1',
     headers: {
         'Content-Type': 'application/json',
     },
@@ -22,6 +22,5 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use((response) => {
     return response;
 }, async (error) => {
-    // Handle 401s (token expiry) here if needed (refresh token logic)
     return Promise.reject(error);
 });

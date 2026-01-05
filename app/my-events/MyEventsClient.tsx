@@ -43,8 +43,6 @@ export default function MyEventsClient() {
                 if (decoded.role === 'host' || decoded.role === 'admin') {
                     endpoint = `/events?organizer=${decoded.userId}`;
                 } else {
-                    // For regular users, fetch joined events
-                    // Assuming backend supports querying by 'participants' array inclusion
                     endpoint = `/events?participants=${decoded.userId}`;
                 }
 

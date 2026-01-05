@@ -22,7 +22,6 @@ export default function PublicProfileClient() {
     const [loading, setLoading] = useState(true);
     const [currentUser, setCurrentUser] = useState<any>(null);
 
-    // Review Form State
     const [rating, setRating] = useState(5);
     const [comment, setComment] = useState("");
     const [showReviewDialog, setShowReviewDialog] = useState(false);
@@ -117,7 +116,6 @@ export default function PublicProfileClient() {
                         </div>
                     </div>
 
-                    {/* Reviews Removed from Profile Page as per request */}
                 </CardContent>
             </Card>
         </div>

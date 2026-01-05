@@ -34,7 +34,6 @@ function EventsContentWrapper() {
     const [loading, setLoading] = useState(true);
     const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
     
-    // Filters
     const [category, setCategory] = useState(searchParams.get('category') || "");
     const [date, setDate] = useState(searchParams.get('date') || "");
     const [location, setLocation] = useState(searchParams.get('location') || "");
@@ -149,9 +148,7 @@ function EventsContentWrapper() {
                     </div>
                 </div>
 
-                {/* Event Grid */}
                 <div className="flex-1">
-                     {/* Search Result Header if search term exists */}
                      {searchTerm && <p className="mb-4 text-sm text-gray-500">Showing results for "{searchTerm}"</p>}
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

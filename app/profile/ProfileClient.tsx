@@ -36,7 +36,6 @@ export default function ProfileClient() {
     const [interests, setInterests] = useState<string[]>([]);
     const [newInterest, setNewInterest] = useState("");
     
-    // Watch profileImage to update avatar preview
     const profileImage = watch('profileImage');
 
     useEffect(() => {
@@ -86,7 +85,6 @@ export default function ProfileClient() {
             const token = Cookies.get('accessToken');
             const decoded: any = jwtDecode(token as string);
             
-            // Include interests in the payload
             const payload = { ...data, interests };
 
             const res = await api.put(`/users/${decoded.userId}`, payload);
@@ -143,7 +141,6 @@ export default function ProfileClient() {
                     </Card>
                 </div>
 
-                {/* Edit Form */}
                 <div className="md:col-span-2">
                     <Card>
                         <CardHeader>

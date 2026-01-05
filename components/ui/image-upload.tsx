@@ -23,13 +23,9 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
         formData.append('image', file);
 
         try {
-            // Direct call to backend upload endpoint
-            // Note: We use fetch here or axios. doing fetch for simplicity to avoid import loops if api.ts has issues, but api is better.
-            // Using the api instance defined in lib/api
-             const response = await fetch('http://localhost:5000/api/upload', {
+             const response = await fetch('https://addahub-backend.vercel.app/api/upload', {
                 method: 'POST',
                 body: formData,
-                // Do not set Content-Type header when sending FormData, browser does it automatically with boundary
             });
             
             const data = await response.json();

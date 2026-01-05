@@ -31,7 +31,6 @@ export default function AboutPage() {
                     </p>
                 </div>
                 <div className="bg-indigo-100 rounded-2xl p-8 aspect-square flex items-center justify-center">
-                    {/* Placeholder for an image */}
                     <Image src={TeamImage} alt="Team Photo" />
                 </div>
             </div>

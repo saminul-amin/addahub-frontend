@@ -13,7 +13,7 @@ export async function generateMetadata(
   const id = params.id;
  
   try {
-      const res = await fetch(`http://localhost:5000/api/v1/users/${id}`);
+      const res = await fetch(`https://addahub-backend.vercel.app/api/v1/users/${id}`);
       const data = await res.json();
       
       if (data.success && data.data) {

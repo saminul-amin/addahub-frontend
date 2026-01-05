@@ -31,7 +31,6 @@ export default function EditEventClient() {
             }
 
             try {
-                // Verify Host
                 const decoded: any = jwtDecode(token);
                 if (decoded.role !== 'host' && decoded.role !== 'admin') {
                      router.push('/dashboard');
@@ -41,21 +40,18 @@ export default function EditEventClient() {
                 const res = await api.get(`/events/${id}`);
                 if (res.data.success) {
                     const event = res.data.data;
-                    // Check ownership (optional safety, backend should also enforce)
                     if(event.organizer._id !== decoded.userId && decoded.role !== 'admin') {
                          toast.error("Unauthorized");
                          router.push('/my-events');
                          return;
                 }
 
-                    // Format date for input
                     const dateObj = new Date(event.date);
                     const formattedDate = dateObj.toISOString().split('T')[0];
 
                     reset({
                         ...event,
                         date: formattedDate,
-                        // Ensure optional fields use empty strings if null
                         image: event.image || '',
                         price: event.price || 0
                     });
@@ -77,7 +73,7 @@ export default function EditEventClient() {
         try {
             const payload = {
                 ...data,
-                date: new Date(`${data.date}T${data.time}`), // Recombine for backend
+                date: new Date(`${data.date}T${data.time}`),
             };
 
             const res = await api.put(`/events/${id}`, payload);
@@ -103,7 +99,6 @@ export default function EditEventClient() {
                 <CardContent>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                         
-                        {/* Basic Info */}
                         <div className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
@@ -137,7 +132,6 @@ export default function EditEventClient() {
                             </div>
                         </div>
 
-                        {/* Date & Location */}
                         <div className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
@@ -161,7 +155,6 @@ export default function EditEventClient() {
                             </div>
                         </div>
 
-                        {/* Details */}
                         <div className="space-y-4">
                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div className="space-y-2">

@@ -46,8 +46,6 @@ export default function CreateEventClient() {
             const payload = {
                 ...data,
                 organizer: userId,
-                // Combine date and time if needed, or keep separate based on backend model
-                // Assuming backend expects them as is or we format them
                 date: new Date(`${data.date}T${data.time}`),
                 participants: [],
                 status: 'open'
@@ -74,7 +72,6 @@ export default function CreateEventClient() {
                 <CardContent>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                         
-                        {/* Basic Info */}
                         <div className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
@@ -108,7 +105,6 @@ export default function CreateEventClient() {
                             </div>
                         </div>
 
-                        {/* Date & Location */}
                         <div className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
@@ -132,7 +128,6 @@ export default function CreateEventClient() {
                             </div>
                         </div>
 
-                        {/* Details */}
                         <div className="space-y-4">
                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div className="space-y-2">
