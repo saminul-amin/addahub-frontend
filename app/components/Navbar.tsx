@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -37,6 +37,7 @@ export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const router = useRouter();
+    const pathname = usePathname();
 
     useEffect(() => {
         const checkLogin = () => {
@@ -94,6 +95,11 @@ export default function Navbar() {
         { name: 'Explore Events', href: '/events' },
     ];
 
+    const isActive = (path: string) => {
+        if (path === '/') return pathname === '/';
+        return pathname?.startsWith(path);
+    };
+
     return (
         <motion.nav 
             className={cn(
@@ -119,20 +125,49 @@ export default function Navbar() {
                             <Link 
                                 key={link.name} 
                                 href={link.href} 
-                                className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors relative group"
+                                className={cn(
+                                    "text-sm font-medium transition-colors relative group",
+                                    isActive(link.href) ? "text-indigo-600" : "text-gray-600 hover:text-indigo-600"
+                                )}
                             >
                                 {link.name}
-                                <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-indigo-600 transition-all group-hover:w-full" />
+                                <span className={cn(
+                                    "absolute left-0 bottom-0 h-0.5 bg-indigo-600 transition-all",
+                                    isActive(link.href) ? "w-full" : "w-0 group-hover:w-full"
+                                )} />
                             </Link>
                         ))}
                         {isLoggedIn && (
-                             <Link 
-                                href="/dashboard" 
-                                className="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors relative group"
-                            >
-                                Dashboard
-                                <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-indigo-600 transition-all group-hover:w-full" />
-                            </Link>
+                            <>
+                                {userData?.role === 'host' && (
+                                    <Link 
+                                        href="/events/create" 
+                                        className={cn(
+                                            "text-sm font-medium transition-colors relative group",
+                                            isActive('/events/create') ? "text-indigo-600" : "text-gray-600 hover:text-indigo-600"
+                                        )}
+                                    >
+                                        Create Event
+                                        <span className={cn(
+                                            "absolute left-0 bottom-0 h-0.5 bg-indigo-600 transition-all",
+                                            isActive('/events/create') ? "w-full" : "w-0 group-hover:w-full"
+                                        )} />
+                                    </Link>
+                                )}
+                                <Link 
+                                    href="/my-events" 
+                                    className={cn(
+                                        "text-sm font-medium transition-colors relative group",
+                                        isActive('/my-events') ? "text-indigo-600" : "text-gray-600 hover:text-indigo-600"
+                                    )}
+                                >
+                                    My Events
+                                    <span className={cn(
+                                        "absolute left-0 bottom-0 h-0.5 bg-indigo-600 transition-all",
+                                        isActive('/my-events') ? "w-full" : "w-0 group-hover:w-full"
+                                    )} />
+                                </Link>
+                            </>
                         )}
                     </div>
 
@@ -163,11 +198,9 @@ export default function Navbar() {
                                 <DropdownMenuItem onClick={() => router.push('/dashboard')} className="cursor-pointer">
                                   <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard
                                 </DropdownMenuItem>
-                                {(userData?.role === 'host' || userData?.role === 'admin') && (
-                                    <DropdownMenuItem onClick={() => router.push('/my-events')} className="cursor-pointer">
-                                        <Calendar className="mr-2 h-4 w-4" /> My Events
-                                    </DropdownMenuItem>
-                                )}
+                                <DropdownMenuItem onClick={() => router.push('/my-events')} className="cursor-pointer">
+                                    <Calendar className="mr-2 h-4 w-4" /> My Events
+                                </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => router.push('/profile')} className="cursor-pointer">
                                   <User className="mr-2 h-4 w-4" /> Profile
                                 </DropdownMenuItem>
@@ -213,7 +246,12 @@ export default function Navbar() {
                                     key={link.name} 
                                     href={link.href}
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                                    className={cn(
+                                        "block px-3 py-2 rounded-md text-base font-medium",
+                                        isActive(link.href) 
+                                            ? "bg-indigo-50 text-indigo-700" 
+                                            : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                                    )}
                                 >
                                     {link.name}
                                 </Link>
@@ -224,11 +262,59 @@ export default function Navbar() {
                                         <div className="px-3 pb-2 text-sm text-gray-500">
                                             Signed in as <br/> <span className="font-medium text-gray-900">{userData?.email}</span>
                                         </div>
-                                        <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Dashboard</Link>
-                                        <Link href="/profile" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Profile</Link>
-                                        {(userData?.role === 'host' || userData?.role === 'admin') && (
-                                            <Link href="/my-events" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">My Events</Link>
+                                        <Link 
+                                            href="/dashboard" 
+                                            onClick={() => setMobileMenuOpen(false)} 
+                                            className={cn(
+                                                "block px-3 py-2 rounded-md text-base font-medium",
+                                                isActive('/dashboard') 
+                                                    ? "bg-indigo-50 text-indigo-700" 
+                                                    : "text-gray-700 hover:bg-gray-50"
+                                            )}
+                                        >
+                                            Dashboard
+                                        </Link>
+                                        <Link 
+                                            href="/profile" 
+                                            onClick={() => setMobileMenuOpen(false)} 
+                                            className={cn(
+                                                "block px-3 py-2 rounded-md text-base font-medium",
+                                                isActive('/profile') 
+                                                    ? "bg-indigo-50 text-indigo-700" 
+                                                    : "text-gray-700 hover:bg-gray-50"
+                                            )}
+                                        >
+                                            Profile
+                                        </Link>
+                                        
+                                        {userData?.role === 'host' && (
+                                            <Link 
+                                                href="/events/create" 
+                                                onClick={() => setMobileMenuOpen(false)} 
+                                                className={cn(
+                                                    "block px-3 py-2 rounded-md text-base font-medium",
+                                                    isActive('/events/create') 
+                                                        ? "bg-indigo-50 text-indigo-700" 
+                                                        : "text-gray-700 hover:bg-gray-50"
+                                                )}
+                                            >
+                                                Create Event
+                                            </Link>
                                         )}
+                                        
+                                        <Link 
+                                            href="/my-events" 
+                                            onClick={() => setMobileMenuOpen(false)} 
+                                            className={cn(
+                                                "block px-3 py-2 rounded-md text-base font-medium",
+                                                isActive('/my-events') 
+                                                    ? "bg-indigo-50 text-indigo-700" 
+                                                    : "text-gray-700 hover:bg-gray-50"
+                                            )}
+                                        >
+                                            My Events
+                                        </Link>
+                                        
                                          <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50">Logout</button>
                                     </div>
                                 ) : (

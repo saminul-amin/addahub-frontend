@@ -1,7 +1,12 @@
-'use client';
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
+import Image from 'next/image';
 import TeamImage from '../../public/team.webp';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "About Us",
+};
 
 export default function AboutPage() {
   return (
@@ -27,7 +32,7 @@ export default function AboutPage() {
                 </div>
                 <div className="bg-indigo-100 rounded-2xl p-8 aspect-square flex items-center justify-center">
                     {/* Placeholder for an image */}
-                    <img src={TeamImage} alt="Team Photo" />
+                    <Image src={TeamImage} alt="Team Photo" />
                 </div>
             </div>
 

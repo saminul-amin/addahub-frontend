@@ -1,6 +1,10 @@
-'use client';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Help Center",
+};
 
 export default function HelpPage() {
     return (
