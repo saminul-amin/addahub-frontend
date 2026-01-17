@@ -1,330 +1,534 @@
-'use client';
-import Link from 'next/link';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation'; // Added for search
-import { useState, useEffect } from 'react'; // Added for search state
-import { api } from './lib/api';
+"use client";
+import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation"; // Added for search
+import { useState, useEffect } from "react"; // Added for search state
+import { api } from "./lib/api";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ArrowRight, Calendar, Users, Star, Search, MapPin, CheckCircle2, Search as SearchIcon } from "lucide-react"; // Renamed Search to prevent conflict or use directly
-import { motion } from 'framer-motion';
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+    ArrowRight,
+    Calendar,
+    Users,
+    Star,
+    Search,
+    MapPin,
+    CheckCircle2,
+    Search as SearchIcon,
+} from "lucide-react"; // Renamed Search to prevent conflict or use directly
+import { motion } from "framer-motion";
+import { MockCardStack } from "@/app/components/MockCardStack";
 
 const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { 
+    visible: {
         opacity: 1,
-        transition: { staggerChildren: 0.1 }
-    }
+        transition: { staggerChildren: 0.1 },
+    },
 };
 
 const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
+    visible: { opacity: 1, y: 0 },
 };
 
 export default function HomeClient() {
-  const router = useRouter();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [location, setLocation] = useState('');
-  const [popularEvents, setPopularEvents] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+    const router = useRouter();
+    const [searchTerm, setSearchTerm] = useState("");
+    const [location, setLocation] = useState("");
+    const [popularEvents, setPopularEvents] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchPopularEvents = async () => {
-      try {
-        const response = await api.get('/events?limit=3');
-        if (response.data.success) {
-          setPopularEvents(response.data.data);
-        }
-      } catch (error) {
-        console.error('Failed to fetch popular events', error);
-      } finally {
-        setLoading(false);
-      }
+    useEffect(() => {
+        const fetchPopularEvents = async () => {
+            try {
+                const response = await api.get("/events?limit=3");
+                if (response.data.success) {
+                    setPopularEvents(response.data.data);
+                }
+            } catch (error) {
+                console.error("Failed to fetch popular events", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchPopularEvents();
+    }, []);
+
+    const handleSearch = () => {
+        const params = new URLSearchParams();
+        if (searchTerm) params.append("searchTerm", searchTerm);
+        if (location) params.append("location", location);
+        router.push(`/events?${params.toString()}`);
     };
-    fetchPopularEvents();
-  }, []);
 
-  const handleSearch = () => {
-      const params = new URLSearchParams();
-      if (searchTerm) params.append('searchTerm', searchTerm);
-      if (location) params.append('location', location); 
-      router.push(`/events?${params.toString()}`);
-  };
+    return (
+        <div className="flex flex-col min-h-screen bg-background">
+            {/* Hero Section */}
+            <section className="relative pt-24 pb-12 md:pt-32 md:pb-20 overflow-hidden">
+                <div className="absolute inset-0 z-0">
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl opacity-30 animate-blob"></div>
+                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/30 rounded-full blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+                </div>
 
-  return (
-    <div className="flex flex-col min-h-screen bg-white">
-      <section className="relative py-20 lg:py-32 overflow-hidden">
-        <div className="container px-4 md:px-6 mx-auto">
-          <motion.div 
-            className="flex flex-col items-center space-y-8 text-center"
-            initial="hidden"
-            animate="visible"
-            variants={containerVariants}
-          >
-            <motion.h1 variants={itemVariants} className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl lg:text-7xl max-w-4xl">
-              Turn your interests into <br/>
-              <span className="text-indigo-600">real-world connections</span>
-            </motion.h1>
-            
-            <motion.p variants={itemVariants} className="max-w-[700px] text-gray-500 md:text-xl leading-relaxed">
-              Don't do it alone. Find companions for hiking, gaming, dining, and more. 
-              Join a community of thousands making new friends every day at <strong>AddaHub</strong>.
-            </motion.p>
-            
-            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 w-full justify-center">
-              <Button asChild size="lg" className="bg-indigo-600 hover:bg-indigo-700 h-12 px-8 text-lg font-semibold shadow-xl shadow-indigo-200">
-                <Link href="/events">Start Exploring <ArrowRight className="ml-2 h-5 w-5" /></Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="h-12 px-8 text-lg hover:bg-gray-50">
-                <Link href="#how-it-works">How it Works</Link>
-              </Button>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
+                <div className="max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto relative z-10 text-center lg:text-left">
+                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                        <motion.div
+                            initial={{ opacity: 0, x: -50 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.8 }}
+                        >
+                            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-foreground mb-6 leading-tight">
+                                Turn your interests into <br />
+                                <span className="text-primary">real-world connections</span>
+                            </h1>
+                            <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
+                                Don't do it alone. Find companions for hiking, gaming, dining, and
+                                more. Join a community of thousands making new friends every day
+                                at <strong>AddaHub</strong>.
+                            </p>
 
-      <section className="py-12 bg-white border-y border-gray-100">
-          <div className="container px-4 md:px-6 mx-auto">
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="bg-white p-4 rounded-2xl shadow-xl shadow-gray-100 border border-gray-100 max-w-4xl mx-auto flex flex-col md:flex-row gap-4 items-center"
-              >
-                  <div className="relative flex-grow w-full">
-                      <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
-                      <Input 
-                        placeholder="Search events (e.g., Hiking, Chess, Jazz)" 
-                        className="pl-10 h-12 border-gray-200 bg-gray-50/50 focus:bg-white transition-colors" 
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                      />
-                  </div>
-                  <div className="relative w-full md:w-48">
-                      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
-                      <Input 
-                        placeholder="Location" 
-                        className="pl-10 h-12 border-gray-200 bg-gray-50/50 focus:bg-white transition-colors" 
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                      />
-                  </div>
-                  <Button size="lg" onClick={handleSearch} className="bg-indigo-600 hover:bg-indigo-700 h-12 w-full md:w-auto px-8">
-                      Find Event
-                  </Button>
-              </motion.div>
-          </div>
-      </section>
+                            <div className="flex flex-col sm:flex-row items-center lg:items-start gap-4">
+                                <Button
+                                    size="lg"
+                                    className="rounded-full px-8 text-base shadow-lg shadow-primary/25"
+                                    asChild
+                                >
+                                    <Link href="/events">Explore Events</Link>
+                                </Button>
+                                <Button
+                                    size="lg"
+                                    variant="outline"
+                                    className="rounded-full px-8 text-base hover:bg-secondary/80"
+                                    asChild
+                                >
+                                    <Link href="/events/create">Host an Event</Link>
+                                </Button>
+                            </div>
+                        </motion.div>
 
-      <section className="py-20 md:py-32 bg-gray-50">
-        <div className="container px-4 md:px-6 mx-auto">
-            <div className="text-center mb-16 space-y-4">
-                <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Explore Categories</h2>
-                <p className="text-gray-500 max-w-2xl mx-auto">Discover activities that match your passion.</p>
-            </div>
-            
-            <motion.div 
-                className="grid grid-cols-2 md:grid-cols-4 gap-8"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={containerVariants}
-            >
-             {[
-                 { icon: Calendar, label: "Social", color: "bg-orange-100 text-orange-600" },
-                 { icon: Users, label: "Community", color: "bg-blue-100 text-blue-600" },
-                 { icon: Star, label: "Featured", color: "bg-yellow-100 text-yellow-600" },
-                 { icon: CheckCircle2, label: "Sports", color: "bg-green-100 text-green-600" }
-             ].map((item, idx) => (
-                 <motion.div key={idx} variants={itemVariants} className="group cursor-pointer">
-                     <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col items-center gap-4 text-center group-hover:-translate-y-1">
-                        <div className={`p-4 rounded-full ${item.color} group-hover:scale-110 transition-transform`}>
-                            <item.icon className="h-8 w-8" />
+                        <div className="relative h-[500px] hidden lg:block overflow-hidden">
+                            {/* 3D Card Stack Animation - Implementation Placeholder */}
+                            <MockCardStack />
                         </div>
-                        <h3 className="font-semibold text-lg text-gray-900">{item.label}</h3>
-                     </div>
-                 </motion.div>
-             ))}
-          </motion.div>
-        </div>
-      </section>
+                    </div>
+                </div>
+            </section>
 
-        <section className="py-20 bg-white">
-            <div className="container px-4 md:px-6 mx-auto">
-                 <div className="flex justify-between items-end mb-12">
-                     <div className="space-y-2">
-                        <h2 className="text-3xl font-bold tracking-tight text-gray-900">Popular Events</h2>
-                        <p className="text-gray-500">Trending activities near you.</p>
-                     </div>
-                     <Link href="/events" className="text-indigo-600 font-semibold hover:text-indigo-700 hidden sm:inline-block">View all &rarr;</Link>
-                 </div>
-                 
-                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                     {loading ? (
-                        <div className="col-span-3 text-center text-gray-500 py-12">Loading popular events...</div>
-                     ) : popularEvents.length > 0 ? (
-                        popularEvents.map((event) => (
-                            <Link key={event._id} href={`/events/${event._id}`}>
-                                <div className="group rounded-2xl overflow-hidden border border-gray-100 bg-white shadow-sm hover:shadow-xl transition-all duration-300 h-full">
-                                    <div className="h-48 bg-gray-100 relative">
-                                        {/* You can add an image check here if event.image exists */}
-                                        {event.image ? (
-                                             <Image 
-                                             src={event.image || '/placeholder-event.jpg'} 
-                                             alt={event.title}
-                                             fill
-                                             className="object-cover transition-transform duration-300 group-hover:scale-105"
-                                          />
-                                        ) : (
-                                        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-semibold text-gray-700">
-                                            Popular
+            {/* Stats Section */}
+            <section className="py-10 bg-primary/5 border-y border-primary/10">
+                <div className="max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-primary/10">
+                        <div>
+                            <p className="text-3xl md:text-4xl font-bold text-primary">10k+</p>
+                            <p className="text-sm text-muted-foreground mt-1">Active Users</p>
+                        </div>
+                        <div>
+                            <p className="text-3xl md:text-4xl font-bold text-primary">500+</p>
+                            <p className="text-sm text-muted-foreground mt-1">Events Hosted</p>
+                        </div>
+                        <div>
+                            <p className="text-3xl md:text-4xl font-bold text-primary">50+</p>
+                            <p className="text-sm text-muted-foreground mt-1">Cities</p>
+                        </div>
+                        <div>
+                            <p className="text-3xl md:text-4xl font-bold text-primary">4.9</p>
+                            <p className="text-sm text-muted-foreground mt-1">App Rating</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Search Section */}
+            <section className="py-12 bg-card border-y border-border">
+                <div className="max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6 }}
+                        className="bg-card p-4 rounded-2xl shadow-xl shadow-muted/20 border border-border max-w-4xl mx-auto flex flex-col md:flex-row gap-4 items-center"
+                    >
+                        <div className="relative flex-grow w-full md:w-auto">
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
+                            <Input
+                                placeholder="Search for events..."
+                                className="pl-10 h-12 border-input bg-muted/50 focus:bg-background transition-colors"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </div>
+                        <div className="relative w-full md:w-1/3">
+                            <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
+                            <Input
+                                placeholder="Location (e.g. Dhaka)"
+                                className="pl-10 h-12 border-input bg-muted/50 focus:bg-background transition-colors"
+                                value={location}
+                                onChange={(e) => setLocation(e.target.value)}
+                            />
+                        </div>
+                        <Button
+                            size="lg"
+                            className="w-full md:w-auto px-8 h-12 rounded-xl"
+                            asChild
+                        >
+                            <Link href={`/events?search=${searchTerm}&location=${location}`}>
+                                Find
+                            </Link>
+                        </Button>
+                    </motion.div>
+                </div>
+            </section>
+
+            {/* How It Works */}
+            <section className="py-20 bg-muted/30">
+                <div className="max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl font-bold text-foreground mb-4">
+                            How AddaHub Works
+                        </h2>
+                        <p className="text-muted-foreground max-w-2xl mx-auto">
+                            Simple steps to get you connected with your community.
+                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {[
+                            {
+                                icon: Search,
+                                title: "Discover",
+                                desc: "Browse through hundreds of local events tailored to your interests.",
+                            },
+                            {
+                                icon: Calendar,
+                                title: "Book",
+                                desc: "Secure your spot in seconds with our easy booking system.",
+                            },
+                            {
+                                icon: Users,
+                                title: "Connect",
+                                desc: "Meet new people and build lasting friendships in real life.",
+                            },
+                        ].map((item, idx) => (
+                            <motion.div
+                                key={idx}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                                className="bg-card p-8 rounded-2xl border border-border shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col items-center gap-4 text-center group hover:-translate-y-1"
+                            >
+                                <div className="p-4 bg-primary/10 rounded-full text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
+                                    <item.icon className="h-8 w-8" />
+                                </div>
+                                <h3 className="text-xl font-semibold text-foreground">
+                                    {item.title}
+                                </h3>
+                                <p className="text-muted-foreground">{item.desc}</p>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Browse by Category */}
+            <section className="py-20 bg-background">
+                <div className="max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl font-bold text-foreground mb-4">Explore by Category</h2>
+                        <p className="text-muted-foreground">Find the perfect activity for your mood</p>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                        {["Social", "Sports", "Outdoors", "Gaming", "Food", "Arts"].map((cat) => (
+                            <Link key={cat} href={`/events?category=${cat}`}>
+                                <motion.div
+                                    whileHover={{ y: -5 }}
+                                    className="p-6 rounded-2xl bg-card border border-border shadow-sm hover:shadow-md text-center transition-all cursor-pointer h-full flex flex-col items-center justify-center gap-2"
+                                >
+                                    <Badge variant="secondary" className="mb-2 bg-primary/10 text-primary hover:bg-primary/20">{cat}</Badge>
+                                </motion.div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Featured Events */}
+            <section className="py-20 bg-background">
+                <div className="max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto">
+                    <div className="flex justify-between items-end mb-12">
+                        <div>
+                            <h2 className="text-3xl font-bold text-foreground mb-2">
+                                Featured Events
+                            </h2>
+                            <p className="text-muted-foreground">
+                                Hand-picked events just for you
+                            </p>
+                        </div>
+                        <Button variant="ghost" asChild className="hidden md:flex group">
+                            <Link href="/events">
+                                View All{" "}
+                                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                        </Button>
+                    </div>
+
+                    {loading ? (
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="space-y-4">
+                                    {/* <Skeleton className="h-48 w-full rounded-2xl" />
+                                <Skeleton className="h-4 w-3/4" />
+                                <Skeleton className="h-4 w-1/2" /> */}
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {popularEvents.map((event) => (
+                                <motion.div
+                                    key={event._id}
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.5 }}
+                                    className="group rounded-2xl overflow-hidden border border-border bg-card shadow-sm hover:shadow-xl transition-all duration-300 h-full"
+                                >
+                                    <div className="relative h-48 overflow-hidden">
+                                        <img
+                                            src={
+                                                event.image ||
+                                                "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&q=80&w=1000"
+                                            }
+                                            alt={event.title}
+                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                        />
+                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                                            <Button
+                                                size="sm"
+                                                className="w-full rounded-full bg-white/90 text-black hover:bg-white"
+                                                asChild
+                                            >
+                                                <Link href={`/events/${event._id}`}>View Details</Link>
+                                            </Button>
                                         </div>
-                                        )}
                                     </div>
                                     <div className="p-6">
-                                        <div className="text-sm text-indigo-600 font-medium mb-2">
-                                            {new Date(event.date).toLocaleDateString()} • {event.time}
+                                        <div className="flex items-center gap-2 text-primary font-medium text-sm mb-2">
+                                            <Calendar className="h-4 w-4" />
+                                            {new Date(event.date).toLocaleDateString()}
                                         </div>
-                                        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">{event.title}</h3>
-                                        <p className="text-gray-500 text-sm mb-4 line-clamp-2">{event.description}</p>
-                                        <div className="flex items-center text-sm text-gray-500">
-                                            <MapPin className="h-4 w-4 mr-1" /> {event.location}
+                                        <h3 className="text-xl font-bold text-foreground mb-2 line-clamp-1 group-hover:text-primary transition-colors">
+                                            {event.title}
+                                        </h3>
+                                        <p className="text-muted-foreground text-sm line-clamp-2 mb-4">
+                                            {event.description}
+                                        </p>
+
+                                        <div className="flex items-center justify-between mt-auto">
+                                            <div className="flex items-center gap-1 text-muted-foreground text-sm">
+                                                <MapPin className="h-3.5 w-3.5" />
+                                                {event.location}
+                                            </div>
+                                            <span className="font-bold text-lg text-primary">
+                                                {event.price > 0 ? `$${event.price}` : "Free"}
+                                            </span>
                                         </div>
                                     </div>
-                                </div>
-                            </Link>
-                        ))
-                     ) : (
-                        <div className="col-span-3 text-center text-gray-500 py-12">No events found.</div>
-                     )}
-                 </div>
-            </div>
-        </section>
-
-      <section id="how-it-works" className="py-24 bg-gradient-to-b from-indigo-50/50 to-white relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-64 h-64 bg-indigo-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-          <div className="absolute top-0 right-0 w-64 h-64 bg-pink-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-
-          <div className="container px-4 md:px-6 mx-auto relative z-10">
-              <div className="text-center mb-20">
-                  <Badge className="mb-4 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 border-none px-4 py-1.5 text-sm font-medium">Simple & Easy</Badge>
-                  <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-6">
-                      How <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">AddaHub</span> Works
-                  </h2>
-                  <p className="text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
-                      Connecting with new people shouldn't be complicated. We've made it as easy as 1-2-3.
-                  </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto">
-                  {[
-                      {
-                          icon: <Users className="w-10 h-10 text-white" />,
-                          title: "Create a Profile",
-                          desc: "Sign up in seconds. Showcase your hobbies, interests, and bio to helps others find you.",
-                          color: "bg-blue-500"
-                      },
-                      {
-                          icon: <Calendar className="w-10 h-10 text-white" />,
-                          title: "Discover Events",
-                          desc: "Browse through hundreds of local activities. Filter by interest, date, or location.",
-                          color: "bg-indigo-500"
-                      },
-                      {
-                          icon: <Star className="w-10 h-10 text-white" />,
-                          title: "Join & Connect",
-                          desc: "Join an event and meet like-minded people. Chat, make friends, and have fun!",
-                          color: "bg-purple-500"
-                      }
-                  ].map((item, index) => (
-                      <div key={index} className="relative group">
-                          <div className="absolute inset-0 bg-white rounded-2xl shadow-xl transform transition-transform duration-300 group-hover:-translate-y-2"></div>
-                          <div className="relative p-8 text-center">
-                              <div className={`w-20 h-20 mx-auto ${item.color} rounded-2xl shadow-lg flex items-center justify-center transform rotate-3 transition-transform duration-300 group-hover:rotate-6 mb-8`}>
-                                  {item.icon}
-                              </div>
-                              <h3 className="text-xl font-bold text-gray-900 mb-4">{item.title}</h3>
-                              <p className="text-gray-500 leading-relaxed">{item.desc}</p>
-                          </div>
-                      </div>
-                  ))}
-              </div>
-          </div>
-      </section>
-
-      <section className="py-20 bg-indigo-900 text-white">
-          <div className="container px-4 md:px-6 mx-auto text-center">
-            <h2 className="text-3xl font-bold tracking-tight mb-16">Stories from our community</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {[
-                    { quote: "I found my hiking group here. Now I never hike alone!", user: "Sarah J." },
-                    { quote: "The best way to meet people in a new city. Highly recommended.", user: "Mike T." },
-                    { quote: "Events are well organized and the people are genuinely friendly.", user: "Emily R." }
-                ].map((testimonial, idx) => (
-                    <motion.div 
-                        key={idx}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: idx * 0.1 }}
-                        className="bg-indigo-800/50 p-8 rounded-2xl backdrop-blur-sm border border-indigo-700"
-                    >
-                        <div className="flex justify-center mb-4">
-                            {[1,2,3,4,5].map((s) => <Star key={s} className="h-5 w-5 text-yellow-400 fill-yellow-400" />)}
+                                </motion.div>
+                            ))}
                         </div>
-                        <p className="text-lg mb-6 leading-relaxed">"{testimonial.quote}"</p>
-                        <p className="font-semibold text-indigo-300">- {testimonial.user}</p>
-                    </motion.div>
-                ))}
-            </div>
-          </div>
-      </section>
-
-       <section className="py-20 bg-white">
-           <div className="container px-4 md:px-6 mx-auto max-w-3xl">
-                <div className="text-center mb-12">
-                   <h2 className="text-3xl font-bold tracking-tight text-gray-900">Frequently Asked Questions</h2>
+                    )}
+                    <div className="mt-8 md:hidden text-center">
+                        <Button variant="outline" asChild className="w-full">
+                            <Link href="/events">View All Events</Link>
+                        </Button>
+                    </div>
                 </div>
-               <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="item-1">
-                  <AccordionTrigger>How do I join an event?</AccordionTrigger>
-                  <AccordionContent>
-                    Simply browse our events page, select an event you're interested in, and click the "Join Event" button. You'll need to create an account first.
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="item-2">
-                  <AccordionTrigger>Is it free to use?</AccordionTrigger>
-                  <AccordionContent>
-                    Yes, browsing and joining many events is free. Some specific events may have a ticket price set by the organizer.
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="item-3">
-                  <AccordionTrigger>Can I host my own event?</AccordionTrigger>
-                  <AccordionContent>
-                    Absolutely! Once you register as a <strong>Host</strong>, you can access your dashboard and create events for others to join.
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-           </div>
-       </section>
+            </section>
 
-       <section className="py-20 bg-gray-50 border-t border-gray-100">
-          <div className="container px-4 md:px-6 mx-auto text-center">
-             <div className="max-w-3xl mx-auto space-y-8">
-                 <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Ready to find your next adventure?</h2>
-                 <p className="text-gray-500 text-lg">Join thousands of others who are connecting, exploring, and having fun.</p>
-                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Button asChild size="lg" className="bg-indigo-600 hover:bg-indigo-700 h-14 px-8 text-lg">
-                        <Link href="/register">Create Free Account</Link>
-                    </Button>
-                 </div>
-             </div>
-          </div>
-       </section>
-    </div>
-  );
+            {/* Host Spotlight */}
+            <section className="py-20 bg-muted/30">
+                <div className="max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto">
+                    <div className="bg-card rounded-3xl p-8 md:p-12 border border-border flex flex-col md:flex-row items-center gap-12">
+                        <div className="w-full md:w-1/3 relative">
+                            <div className="aspect-square rounded-2xl overflow-hidden relative">
+                                <Image
+                                    src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400"
+                                    alt="Host Spotlight"
+                                    fill
+                                    className="object-cover"
+                                />
+                            </div>
+                            <div className="absolute -bottom-4 -right-4 bg-primary text-primary-foreground px-4 py-2 rounded-full font-bold shadow-lg">
+                                Top Host
+                            </div>
+                        </div>
+                        <div className="w-full md:w-2/3 space-y-6 text-center md:text-left">
+                            <h2 className="text-3xl font-bold">Meet Sarah Jenkins</h2>
+                            <p className="text-lg text-muted-foreground leading-relaxed italic">
+                                "I started hosting hiking events to meet new people in the city. Two years later, I've made best friends and explored every trail in the region. Hosting on AddaHub changed my life!"
+                            </p>
+                            <div className="flex flex-wrap gap-4 justify-center md:justify-start">
+                                <Badge variant="outline" className="px-3 py-1">24 Events Hosted</Badge>
+                                <Badge variant="outline" className="px-3 py-1">4.9/5 Rating</Badge>
+                                <Badge variant="outline" className="px-3 py-1">Hiking Enthusiast</Badge>
+                            </div>
+                            <Button asChild variant="default" className="mt-4">
+                                <Link href="/events?host=SarahJ">View Sarah's Events</Link>
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* CTA Section */}
+            <section className="py-24 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-30 mix-blend-multiply"></div>
+                </div>
+                <div className="max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto relative z-10 text-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                    >
+                        <h2 className="text-3xl md:text-5xl font-bold mb-6 text-foreground">
+                            Ready to Experience More?
+                        </h2>
+                        <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
+                            Whether you are looking to join an event or host your own, AddaHub
+                            is the place to be. Start your journey today.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                            <Button
+                                size="lg"
+                                className="rounded-full px-8 shadow-lg shadow-primary/20"
+                                asChild
+                            >
+                                <Link href="/register">Get Started for Free</Link>
+                            </Button>
+                        </div>
+                    </motion.div>
+                </div>
+            </section>
+
+            {/* Testimonials Section */}
+            <section className="py-20 bg-gradient-to-b from-indigo-50/50 to-white">
+                <div className="max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto text-center">
+                    <h2 className="text-3xl font-bold tracking-tight mb-16 text-foreground">
+                        Stories from our community
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {[
+                            {
+                                quote: "I found my hiking group here. Now I never hike alone!",
+                                user: "Sarah J.",
+                            },
+                            {
+                                quote:
+                                    "The best way to meet people in a new city. Highly recommended.",
+                                user: "Mike T.",
+                            },
+                            {
+                                quote:
+                                    "Events are well organized and the people are genuinely friendly.",
+                                user: "Emily R.",
+                            },
+                        ].map((testimonial, idx) => (
+                            <motion.div
+                                key={idx}
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: idx * 0.1 }}
+                                className="bg-card p-8 rounded-2xl shadow-sm hover:shadow-md transition-all border border-indigo-100"
+                            >
+                                <div className="flex justify-center mb-4">
+                                    {[1, 2, 3, 4, 5].map((s) => (
+                                        <Star
+                                            key={s}
+                                            className="h-5 w-5 text-yellow-400 fill-yellow-400"
+                                        />
+                                    ))}
+                                </div>
+                                <p className="text-lg mb-6 leading-relaxed text-muted-foreground">
+                                    "{testimonial.quote}"
+                                </p>
+                                <p className="font-semibold text-primary">
+                                    - {testimonial.user}
+                                </p>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* FAQ Section */}
+            <section className="py-20 bg-card">
+                <div className="max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto max-w-3xl">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl font-bold tracking-tight text-foreground">
+                            Frequently Asked Questions
+                        </h2>
+                    </div>
+                    <Accordion type="single" collapsible className="w-full">
+                        <AccordionItem value="item-1">
+                            <AccordionTrigger>How do I join an event?</AccordionTrigger>
+                            <AccordionContent>
+                                Simply browse our events page, select an event you're interested
+                                in, and click the "Join Event" button. You'll need to create an
+                                account first.
+                            </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="item-2">
+                            <AccordionTrigger>Is it free to use?</AccordionTrigger>
+                            <AccordionContent>
+                                Yes, browsing and joining many events is free. Some specific
+                                events may have a ticket price set by the organizer.
+                            </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="item-3">
+                            <AccordionTrigger>Can I host my own event?</AccordionTrigger>
+                            <AccordionContent>
+                                Absolutely! Once you register as a <strong>Host</strong>, you
+                                can access your dashboard and create events for others to join.
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
+                </div>
+            </section>
+
+            <section className="py-20 bg-muted/30 border-t border-border">
+                <div className="max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto text-center">
+                    <div className="max-w-3xl mx-auto space-y-8">
+                        <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                            Ready to find your next adventure?
+                        </h2>
+                        <p className="text-muted-foreground text-lg">
+                            Join thousands of others who are connecting, exploring, and having
+                            fun.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                            <Button
+                                asChild
+                                size="lg"
+                                className="bg-primary hover:bg-primary/90 h-14 px-8 text-lg"
+                            >
+                                <Link href="/register">Create Free Account</Link>
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    );
 }
