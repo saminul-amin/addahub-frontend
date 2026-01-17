@@ -55,7 +55,7 @@ export default function LoginClient() {
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
                                 <Label htmlFor="password">Password</Label>
-                                <Link href="#" className="text-xs text-indigo-600 hover:text-indigo-500">
+                                <Link href="/forgot-password" className="text-xs text-primary hover:text-primary/80">
                                     Forgot password?
                                 </Link>
                             </div>
@@ -75,7 +75,7 @@ export default function LoginClient() {
                 <CardFooter className="flex justify-center">
                     <div className="text-sm text-muted-foreground">
                         Don't have an account?{" "}
-                        <Link href="/register" className="text-indigo-600 hover:text-indigo-500 font-medium">
+                        <Link href="/register" className="text-primary hover:text-primary/80 font-medium">
                             Register
                         </Link>
                     </div>

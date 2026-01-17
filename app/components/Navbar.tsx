@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Menu, X, ChevronDown, Calendar, User, LayoutDashboard, LogOut } from "lucide-react";
+import { ModeToggle } from "@/components/mode-toggle";
 
 interface UserPayload {
     userId: string;
@@ -102,8 +103,8 @@ export default function Navbar() {
     return (
         <motion.nav 
             className={cn(
-                "fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white",
-                scrolled ? "shadow-md py-2 border-b" : "py-4 border-b border-transparent"
+                "fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-background/80",
+                scrolled ? "shadow-md py-2 border-b backdrop-blur-md" : "py-4 border-b border-transparent backdrop-blur-sm"
             )}
             initial={{ y: -100 }}
             animate={{ y: 0 }}
@@ -112,8 +113,8 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center">
                     <Link href="/" className="flex items-center gap-2 group">
-                        <span className="font-extrabold text-2xl text-gray-900 tracking-tight group-hover:text-indigo-600 transition-colors">
-                            Adda<span className="group-hover:text-gray-900 text-indigo-600">Hub</span>
+                        <span className="font-extrabold text-2xl text-foreground tracking-tight group-hover:text-primary transition-colors">
+                            Adda<span className="group-hover:text-foreground text-primary">Hub</span>
                         </span>
                     </Link>
 
@@ -124,12 +125,12 @@ export default function Navbar() {
                                 href={link.href} 
                                 className={cn(
                                     "text-sm font-medium transition-colors relative group",
-                                    isActive(link.href) ? "text-indigo-600" : "text-gray-600 hover:text-indigo-600"
+                                    isActive(link.href) ? "text-primary" : "text-muted-foreground hover:text-primary"
                                 )}
                             >
                                 {link.name}
                                 <span className={cn(
-                                    "absolute left-0 bottom-0 h-0.5 bg-indigo-600 transition-all",
+                                    "absolute left-0 bottom-0 h-0.5 bg-primary transition-all",
                                     isActive(link.href) ? "w-full" : "w-0 group-hover:w-full"
                                 )} />
                             </Link>
@@ -141,12 +142,12 @@ export default function Navbar() {
                                         href="/events/create" 
                                         className={cn(
                                             "text-sm font-medium transition-colors relative group",
-                                            isActive('/events/create') ? "text-indigo-600" : "text-gray-600 hover:text-indigo-600"
+                                            isActive('/events/create') ? "text-primary" : "text-muted-foreground hover:text-primary"
                                         )}
                                     >
                                         Create Event
                                         <span className={cn(
-                                            "absolute left-0 bottom-0 h-0.5 bg-indigo-600 transition-all",
+                                            "absolute left-0 bottom-0 h-0.5 bg-primary transition-all",
                                             isActive('/events/create') ? "w-full" : "w-0 group-hover:w-full"
                                         )} />
                                     </Link>
@@ -155,12 +156,12 @@ export default function Navbar() {
                                     href="/my-events" 
                                     className={cn(
                                         "text-sm font-medium transition-colors relative group",
-                                        isActive('/my-events') ? "text-indigo-600" : "text-gray-600 hover:text-indigo-600"
+                                        isActive('/my-events') ? "text-primary" : "text-muted-foreground hover:text-primary"
                                     )}
                                 >
                                     My Events
                                     <span className={cn(
-                                        "absolute left-0 bottom-0 h-0.5 bg-indigo-600 transition-all",
+                                        "absolute left-0 bottom-0 h-0.5 bg-primary transition-all",
                                         isActive('/my-events') ? "w-full" : "w-0 group-hover:w-full"
                                     )} />
                                 </Link>
@@ -168,14 +169,16 @@ export default function Navbar() {
                         )}
                     </div>
 
+
                     <div className="hidden md:flex items-center space-x-4">
+                        <ModeToggle />
                         {isLoggedIn ? (
                              <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" className="relative h-10 w-10 rounded-full focus:ring-0">
-                                  <Avatar className="h-10 w-10 border-2 border-indigo-100 hover:border-indigo-200 transition-colors">
+                                  <Avatar className="h-10 w-10 border-2 border-primary/20 hover:border-primary/40 transition-colors">
                                     <AvatarImage src="" alt={userData?.name || "User"} />
-                                    <AvatarFallback className="bg-indigo-50 text-indigo-700 font-bold">
+                                    <AvatarFallback className="bg-primary/10 text-primary font-bold">
                                         {userData ? getInitials(userData.name) : '...'}
                                     </AvatarFallback>
                                   </Avatar>
@@ -208,17 +211,18 @@ export default function Navbar() {
                             </DropdownMenu>
                         ) : (
                             <div className="flex items-center space-x-3">
-                                <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors">
+                                <Link href="/login" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
                                     Log in
                                 </Link>
-                                <Button asChild className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">
+                                <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">
                                     <Link href="/register">Sign Up</Link>
                                 </Button>
                             </div>
                         )}
                     </div>
 
-                    <div className="md:hidden">
+                    <div className="md:hidden flex items-center gap-2">
+                        <ModeToggle />
                         <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
                             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                         </Button>
@@ -243,8 +247,8 @@ export default function Navbar() {
                                     className={cn(
                                         "block px-3 py-2 rounded-md text-base font-medium",
                                         isActive(link.href) 
-                                            ? "bg-indigo-50 text-indigo-700" 
-                                            : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                                            ? "bg-primary/10 text-primary" 
+                                            : "text-muted-foreground hover:text-foreground hover:bg-accent"
                                     )}
                                 >
                                     {link.name}
@@ -262,8 +266,8 @@ export default function Navbar() {
                                             className={cn(
                                                 "block px-3 py-2 rounded-md text-base font-medium",
                                                 isActive('/dashboard') 
-                                                    ? "bg-indigo-50 text-indigo-700" 
-                                                    : "text-gray-700 hover:bg-gray-50"
+                                                    ? "bg-primary/10 text-primary" 
+                                                    : "text-muted-foreground hover:bg-accent"
                                             )}
                                         >
                                             Dashboard
@@ -274,8 +278,8 @@ export default function Navbar() {
                                             className={cn(
                                                 "block px-3 py-2 rounded-md text-base font-medium",
                                                 isActive('/profile') 
-                                                    ? "bg-indigo-50 text-indigo-700" 
-                                                    : "text-gray-700 hover:bg-gray-50"
+                                                    ? "bg-primary/10 text-primary" 
+                                                    : "text-muted-foreground hover:bg-accent"
                                             )}
                                         >
                                             Profile
@@ -288,8 +292,8 @@ export default function Navbar() {
                                                 className={cn(
                                                     "block px-3 py-2 rounded-md text-base font-medium",
                                                     isActive('/events/create') 
-                                                        ? "bg-indigo-50 text-indigo-700" 
-                                                        : "text-gray-700 hover:bg-gray-50"
+                                                        ? "bg-primary/10 text-primary" 
+                                                        : "text-muted-foreground hover:bg-accent"
                                                 )}
                                             >
                                                 Create Event
@@ -302,8 +306,8 @@ export default function Navbar() {
                                             className={cn(
                                                 "block px-3 py-2 rounded-md text-base font-medium",
                                                 isActive('/my-events') 
-                                                    ? "bg-indigo-50 text-indigo-700" 
-                                                    : "text-gray-700 hover:bg-gray-50"
+                                                    ? "bg-primary/10 text-primary" 
+                                                    : "text-muted-foreground hover:bg-accent"
                                             )}
                                         >
                                             My Events
@@ -316,7 +320,7 @@ export default function Navbar() {
                                          <Button asChild className="w-full justify-center" variant="outline">
                                             <Link href="/login" onClick={() => setMobileMenuOpen(false)}>Log in</Link>
                                         </Button>
-                                        <Button asChild className="w-full justify-center bg-indigo-600 hover:bg-indigo-700">
+                                        <Button asChild className="w-full justify-center bg-primary hover:bg-primary/90">
                                             <Link href="/register" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
                                         </Button>
                                     </div>
