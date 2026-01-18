@@ -385,6 +385,7 @@ export default function HomeClient() {
       </section>
 
       {/* Stats Section */}
+      {/* All of these are fake btw! :( */}
       <section className="py-10 bg-primary/5 border-y border-primary/10">
         <div className="max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-primary/10">
@@ -447,6 +448,7 @@ export default function HomeClient() {
       </section>
 
       {/* Testimonials Section */}
+      {/* Well... These are also fake! :P */}
       <section className="py-20 bg-gradient-to-b from-indigo-50/50 to-white dark:from-slate-900 dark:to-background">
         <div className="max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto text-center">
           <h2 className="text-3xl font-bold tracking-tight mb-16 text-foreground">

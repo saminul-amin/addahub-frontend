@@ -73,7 +73,7 @@ export const MockCardStack = ({ items = [] }: MockCardStackProps) => {
               </motion.div>
             );
           }
-          // Render next card behind
+
           if (i === (index + 1) % items.length) {
             return (
               <motion.div
