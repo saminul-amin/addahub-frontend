@@ -47,12 +47,6 @@ Built with the latest **Next.js 16** and **Express 5**, it features role-based a
 
 ---
 
-## Walkthrough Video
-
-[Click Here for Walkthrough Video](https://drive.google.com/file/d/1_XMV1AA4sOZC6FvLN9K8DQEU59uq6Wzc/view?usp=sharing)
-
----
-
 ## Contributing
 Contributions are welcome! Please fork the repository and submit a pull request for review.
 
