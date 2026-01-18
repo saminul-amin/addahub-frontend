@@ -19,18 +19,18 @@ export default function ContactClient() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-muted/30 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16">
-                    <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">Get in Touch</h1>
-                    <p className="mt-4 text-xl text-gray-600">We'd love to hear from you. Here's how you can reach us.</p>
+                    <h1 className="text-4xl font-extrabold text-foreground sm:text-5xl">Get in Touch</h1>
+                    <p className="mt-4 text-xl text-muted-foreground">We'd love to hear from you. Here's how you can reach us.</p>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-1 space-y-6">
                         <Card>
                             <CardHeader className="flex flex-row items-center gap-4">
-                                <div className="h-12 w-12 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600">
+                                <div className="h-12 w-12 bg-primary/20 rounded-lg flex items-center justify-center text-primary">
                                     <Mail className="h-6 w-6" />
                                 </div>
                                 <div>
@@ -39,13 +39,13 @@ export default function ContactClient() {
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-indigo-600 font-medium">support@addahub.com</p>
+                                <p className="text-primary font-medium">support@addahub.com</p>
                             </CardContent>
                         </Card>
 
                         <Card>
                             <CardHeader className="flex flex-row items-center gap-4">
-                                <div className="h-12 w-12 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600">
+                                <div className="h-12 w-12 bg-primary/20 rounded-lg flex items-center justify-center text-primary">
                                     <MapPin className="h-6 w-6" />
                                 </div>
                                 <div>
@@ -54,13 +54,13 @@ export default function ContactClient() {
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-gray-600">Block: C, Section: 10<br />Mirpur, Dhaka</p>
+                                <p className="text-muted-foreground">Block: C, Section: 10<br />Mirpur, Dhaka</p>
                             </CardContent>
                         </Card>
 
                         <Card>
                             <CardHeader className="flex flex-row items-center gap-4">
-                                <div className="h-12 w-12 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600">
+                                <div className="h-12 w-12 bg-primary/20 rounded-lg flex items-center justify-center text-primary">
                                     <Phone className="h-6 w-6" />
                                 </div>
                                 <div>
@@ -69,7 +69,7 @@ export default function ContactClient() {
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-gray-600">+880 1234 567890</p>
+                                <p className="text-muted-foreground">+880 1234 567890</p>
                             </CardContent>
                         </Card>
                     </div>
@@ -105,7 +105,7 @@ export default function ContactClient() {
                                             {...register('message', { required: true })}
                                         />
                                     </div>
-                                    <Button type="submit" className="w-full md:w-auto bg-indigo-600 hover:bg-indigo-700">
+                                    <Button type="submit" className="w-full md:w-auto bg-primary hover:bg-primary/90">
                                         <Send className="w-4 h-4 mr-2" /> Send Message
                                     </Button>
                                 </form>

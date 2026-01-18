@@ -38,7 +38,7 @@ export default function HelpPage() {
                          <AccordionItem value="item-4">
                             <AccordionTrigger>How can I contact support?</AccordionTrigger>
                             <AccordionContent>
-                                You can reach out to us via our <a href="/contact" className="text-indigo-600 underline">Contact Page</a> or email us directly at support@addahub.com.
+                                You can reach out to us via our <a href="/contact" className="text-primary underline">Contact Page</a> or email us directly at support@addahub.com.
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>

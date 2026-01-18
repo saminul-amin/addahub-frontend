@@ -126,22 +126,22 @@ export default function DashboardClient() {
     if (loading) {
         return (
              <div className="flex items-center justify-center min-h-screen">
-                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
              </div>
          );
     }
 
     return (
-        <div className="container mx-auto px-4 md:px-8 py-8 md:py-12 min-h-screen bg-gray-50/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 min-h-screen bg-muted/30">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                  <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-gray-900">Welcome, {user?.name?.split(' ')[0] || 'User'}!</h1>
+                    <h1 className="text-3xl font-bold tracking-tight text-foreground">Welcome, {user?.name?.split(' ')[0] || 'User'}!</h1>
                     <p className="text-muted-foreground mt-1">
                         {user?.role === 'admin' ? "Admin Dashboard Control Center" : "Here's what's happening with your events."}
                     </p>
                  </div>
                  {user?.role === 'host' || user?.role === 'admin' ? (
-                     <Button className="bg-indigo-600 hover:bg-indigo-700 shadow-sm" asChild>
+                     <Button className="bg-primary hover:bg-primary/90 shadow-sm" asChild>
                         <Link href="/events/create">
                             <PlusCircle className="mr-2 h-4 w-4" /> Create Event
                         </Link>
@@ -151,23 +151,23 @@ export default function DashboardClient() {
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 <div className="lg:col-span-1">
-                    <Card className="border-none shadow-md sticky top-24">
+                    <Card className="border-border shadow-md sticky top-24">
                         <CardHeader className="items-center text-center pb-2">
-                            <div className="h-24 w-24 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-3xl mb-4">
+                            <div className="h-24 w-24 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-3xl mb-4">
                                 {user?.name?.charAt(0).toUpperCase() || 'U'}
                             </div>
                             <CardTitle>{user?.name}</CardTitle>
-                            <CardDescription className="capitalize badge badge-secondary mt-2 inline-block px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-xs font-semibold">
+                            <CardDescription className="capitalize badge badge-secondary mt-2 inline-block px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-semibold">
                                 {user?.role} Account
                             </CardDescription>
                         </CardHeader>
                          <CardContent className="space-y-4 pt-4">
-                            <div className="flex items-center text-sm text-gray-600">
-                                <Mail className="w-4 h-4 mr-3 text-indigo-500" />
+                            <div className="flex items-center text-sm text-muted-foreground">
+                                <Mail className="w-4 h-4 mr-3 text-primary" />
                                 <span className="truncate">{user?.email}</span>
                             </div>
-                             <div className="flex items-center text-sm text-gray-600">
-                                <UserIcon className="w-4 h-4 mr-3 text-indigo-500" />
+                             <div className="flex items-center text-sm text-muted-foreground">
+                                <UserIcon className="w-4 h-4 mr-3 text-primary" />
                                 <span>Member since {new Date().getFullYear()}</span>
                             </div>
                             <Button variant="outline" className="w-full mt-4" asChild>
@@ -179,17 +179,17 @@ export default function DashboardClient() {
 
                 <div className="lg:col-span-3">
                     <Tabs defaultValue={user?.role === 'admin' ? "overview" : "joined"} className="space-y-6">
-                        <TabsList className="bg-white p-1 rounded-lg border shadow-sm w-full md:w-auto grid grid-cols-3 md:flex flex-wrap h-auto">
+                        <TabsList className="bg-card p-1 rounded-lg border border-border shadow-sm w-full md:w-auto grid grid-cols-3 md:flex flex-wrap h-auto">
                             {user?.role === 'admin' && (
                                 <>
-                                    <TabsTrigger value="overview" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white rounded-md px-4 py-2">Overview</TabsTrigger>
-                                    <TabsTrigger value="users" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white rounded-md px-4 py-2">Manage Users</TabsTrigger>
-                                    <TabsTrigger value="hosts" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white rounded-md px-4 py-2">Manage Hosts</TabsTrigger>
-                                    <TabsTrigger value="manage_events" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white rounded-md px-4 py-2">Manage Events</TabsTrigger>
+                                    <TabsTrigger value="overview" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md px-4 py-2">Overview</TabsTrigger>
+                                    <TabsTrigger value="users" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md px-4 py-2">Manage Users</TabsTrigger>
+                                    <TabsTrigger value="hosts" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md px-4 py-2">Manage Hosts</TabsTrigger>
+                                    <TabsTrigger value="manage_events" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md px-4 py-2">Manage Events</TabsTrigger>
                                 </>
                             )}
-                            <TabsTrigger value="joined" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white rounded-md px-4 py-2">{user?.role === 'admin' ? "My Joined" : "Joined Events"}</TabsTrigger>
-                            <TabsTrigger value="hosting" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white rounded-md px-4 py-2">{user?.role === 'admin' ? "My Hosting" : "Hosting"}</TabsTrigger>
+                            <TabsTrigger value="joined" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md px-4 py-2">{user?.role === 'admin' ? "My Joined" : "Joined Events"}</TabsTrigger>
+                            <TabsTrigger value="hosting" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-md px-4 py-2">{user?.role === 'admin' ? "My Hosting" : "Hosting"}</TabsTrigger>
                         </TabsList>
                         
                         {user?.role === 'admin' && (
@@ -242,7 +242,7 @@ export default function DashboardClient() {
                                                 <div key={u._id} className="flex items-center justify-between p-4 border rounded-lg">
                                                     <div>
                                                         <p className="font-semibold">{u.name}</p>
-                                                        <p className="text-sm text-gray-500">{u.email}</p>
+                                                        <p className="text-sm text-muted-foreground">{u.email}</p>
                                                         <Badge variant="secondary" className="mt-1">{u.role}</Badge>
                                                     </div>
                                                     <Button variant="ghost" size="icon" className="text-red-500 hover:bg-red-50" onClick={() => handleDeleteUser(u._id)}>
@@ -251,7 +251,7 @@ export default function DashboardClient() {
                                                 </div>
                                             ))}
                                             {allUsers.filter(u => u.role === 'user').length === 0 && (
-                                                <p className="text-gray-500 text-center py-4">No users found.</p>
+                                                <p className="text-muted-foreground text-center py-4">No users found.</p>
                                             )}
                                         </div>
                                     </CardContent>
@@ -272,8 +272,8 @@ export default function DashboardClient() {
                                                 <div key={u._id} className="flex items-center justify-between p-4 border rounded-lg">
                                                     <div>
                                                         <p className="font-semibold">{u.name}</p>
-                                                        <p className="text-sm text-gray-500">{u.email}</p>
-                                                        <Badge variant="outline" className="mt-1 border-indigo-200 text-indigo-700 bg-indigo-50">{u.role}</Badge>
+                                                        <p className="text-sm text-muted-foreground">{u.email}</p>
+                                                        <Badge variant="outline" className="mt-1 border-primary/20 text-primary bg-primary/10">{u.role}</Badge>
                                                     </div>
                                                     <Button variant="ghost" size="icon" className="text-red-500 hover:bg-red-50" onClick={() => handleDeleteUser(u._id)}>
                                                         <Trash2 className="h-4 w-4" />
@@ -281,7 +281,7 @@ export default function DashboardClient() {
                                                 </div>
                                             ))}
                                              {allUsers.filter(u => u.role === 'host').length === 0 && (
-                                                <p className="text-gray-500 text-center py-4">No hosts found.</p>
+                                                <p className="text-muted-foreground text-center py-4">No hosts found.</p>
                                             )}
                                         </div>
                                     </CardContent>
@@ -302,7 +302,7 @@ export default function DashboardClient() {
                                                 <div key={e._id} className="flex items-center justify-between p-4 border rounded-lg">
                                                     <div>
                                                         <p className="font-semibold">{e.title}</p>
-                                                        <p className="text-sm text-gray-500">{new Date(e.date).toLocaleDateString()} • {e.status}</p>
+                                                        <p className="text-sm text-muted-foreground">{new Date(e.date).toLocaleDateString()} • {e.status}</p>
                                                     </div>
                                                     <div className="flex gap-2">
                                                         <Button variant="outline" size="sm" asChild>
@@ -315,7 +315,7 @@ export default function DashboardClient() {
                                                 </div>
                                             ))}
                                             {allEvents.length === 0 && (
-                                                <p className="text-gray-500 text-center py-4">No events found.</p>
+                                                <p className="text-muted-foreground text-center py-4">No events found.</p>
                                             )}
                                         </div>
                                     </CardContent>
@@ -331,7 +331,7 @@ export default function DashboardClient() {
                                             <CardTitle>Upcoming Activities</CardTitle>
                                             <CardDescription>Events you have booked a spot for.</CardDescription>
                                         </div>
-                                        <Badge variant="secondary" className="text-indigo-600 bg-indigo-50">{joinedEvents.length} Events</Badge>
+                                        <Badge variant="secondary" className="text-primary bg-primary/10">{joinedEvents.length} Events</Badge>
                                     </div>
                                 </CardHeader>
                                 <CardContent>
@@ -340,11 +340,11 @@ export default function DashboardClient() {
                                             {joinedEvents.map(event => (
                                                 <div key={event._id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors gap-4">
                                                     <div className="flex items-center gap-4">
-                                                        <div className="h-12 w-12 rounded-lg bg-indigo-100 flex items-center justify-center flex-shrink-0">
-                                                            <Calendar className="h-6 w-6 text-indigo-600" />
+                                                        <div className="h-12 w-12 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
+                                                            <Calendar className="h-6 w-6 text-primary" />
                                                         </div>
                                                         <div>
-                                                            <Link href={`/events/${event._id}`} className="font-semibold hover:text-indigo-600 transition-colors">{event.title}</Link>
+                                                            <Link href={`/events/${event._id}`} className="font-semibold hover:text-primary transition-colors">{event.title}</Link>
                                                             <div className="flex items-center text-sm text-muted-foreground mt-1">
                                                                 <MapPin className="h-3 w-3 mr-1" /> {event.location}
                                                                 <span className="mx-2">•</span>
@@ -359,13 +359,13 @@ export default function DashboardClient() {
                                             ))}
                                         </div>
                                     ) : (
-                                        <div className="flex flex-col items-center justify-center p-12 text-center bg-gray-50/50 rounded-xl border-2 border-dashed">
-                                            <div className="h-16 w-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                                                 <Calendar className="h-8 w-8 text-gray-400" />
+                                        <div className="flex flex-col items-center justify-center p-12 text-center bg-muted/40 rounded-xl border-2 border-dashed">
+                                            <div className="h-16 w-16 bg-muted rounded-full flex items-center justify-center mb-4">
+                                                 <Calendar className="h-8 w-8 text-muted-foreground" />
                                             </div>
-                                            <h3 className="text-lg font-medium text-gray-900">No upcoming events</h3>
+                                            <h3 className="text-lg font-medium text-foreground">No upcoming events</h3>
                                             <p className="text-muted-foreground mt-1 mb-6 max-w-sm">You haven't joined any events yet. Check out what's happening nearby!</p>
-                                            <Button className="bg-indigo-600 hover:bg-indigo-700" onClick={() => router.push('/events')}>Find Events</Button>
+                                            <Button className="bg-primary hover:bg-primary/90" onClick={() => router.push('/events')}>Find Events</Button>
                                         </div>
                                     )}
                                 </CardContent>
@@ -380,7 +380,7 @@ export default function DashboardClient() {
                                             <CardTitle>My Events</CardTitle>
                                             <CardDescription>Events you are organizing.</CardDescription>
                                         </div>
-                                         <Badge variant="secondary" className="text-indigo-600 bg-indigo-50">{hostedEvents.length} Events</Badge>
+                                         <Badge variant="secondary" className="text-primary bg-primary/10">{hostedEvents.length} Events</Badge>
                                     </div>
                                 </CardHeader>
                                 <CardContent>
@@ -389,13 +389,13 @@ export default function DashboardClient() {
                                             {hostedEvents.map(event => (
                                                 <div key={event._id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors gap-4">
                                                     <div className="flex items-center gap-4">
-                                                        <div className="h-12 w-12 rounded-lg bg-orange-100 flex items-center justify-center flex-shrink-0">
+                                                        <div className="h-12 w-12 rounded-lg bg-orange-500/20 flex items-center justify-center flex-shrink-0">
                                                             <ListTodo className="h-6 w-6 text-orange-600" />
                                                         </div>
                                                         <div>
-                                                            <Link href={`/events/${event._id}`} className="font-semibold hover:text-indigo-600 transition-colors">{event.title}</Link>
+                                                            <Link href={`/events/${event._id}`} className="font-semibold hover:text-primary transition-colors">{event.title}</Link>
                                                             <div className="flex items-center text-sm text-muted-foreground mt-1">
-                                                                <span className="capitalize px-2 py-0.5 rounded-full bg-gray-100 text-xs font-medium border mr-2">{event.status}</span>
+                                                                <span className="capitalize px-2 py-0.5 rounded-full bg-muted text-xs font-medium border mr-2">{event.status}</span>
                                                                 {new Date(event.date).toLocaleDateString()}
                                                             </div>
                                                         </div>
@@ -407,16 +407,16 @@ export default function DashboardClient() {
                                             ))}
                                         </div>
                                     ) : (
-                                        <div className="flex flex-col items-center justify-center p-12 text-center bg-gray-50/50 rounded-xl border-2 border-dashed">
-                                            <div className="h-16 w-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                                                 <ListTodo className="h-8 w-8 text-gray-400" />
+                                        <div className="flex flex-col items-center justify-center p-12 text-center bg-muted/40 rounded-xl border-2 border-dashed">
+                                            <div className="h-16 w-16 bg-muted rounded-full flex items-center justify-center mb-4">
+                                                 <ListTodo className="h-8 w-8 text-muted-foreground" />
                                             </div>
-                                            <h3 className="text-lg font-medium text-gray-900">No events hosted</h3>
+                                            <h3 className="text-lg font-medium text-foreground">No events hosted</h3>
                                             <p className="text-muted-foreground mt-1 mb-6 max-w-sm">You haven't created any events yet. Start building your community!</p>
                                             {user?.role === 'host' || user?.role === 'admin' ? (
-                                                <Link href="/events/create"><Button className="bg-indigo-600 hover:bg-indigo-700">Create My First Event</Button></Link>
+                                                <Link href="/events/create"><Button className="bg-primary hover:bg-primary/90">Create My First Event</Button></Link>
                                             ) : (
-                                                 <p className="text-sm text-orange-600 bg-orange-50 px-4 py-2 rounded-lg">You need a Host account to create events.</p>
+                                                 <p className="text-sm text-orange-600 bg-orange-500/10 px-4 py-2 rounded-lg">You need a Host account to create events.</p>
                                             )}
                                         </div>
                                     )}

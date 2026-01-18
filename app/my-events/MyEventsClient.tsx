@@ -64,7 +64,7 @@ export default function MyEventsClient() {
     if (loading) {
         return (
              <div className="flex items-center justify-center min-h-screen">
-                 <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
              </div>
          );
     }
@@ -72,14 +72,14 @@ export default function MyEventsClient() {
     const isHost = role === 'host' || role === 'admin';
 
     return (
-        <div className="container mx-auto px-4 py-12 max-w-5xl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">{isHost ? 'Hosted Events' : 'Joined Events'}</h1>
-                    <p className="text-gray-500 mt-1">{isHost ? 'Manage the events you are hosting.' : 'Events you have signed up for.'}</p>
+                    <h1 className="text-3xl font-bold text-foreground">{isHost ? 'Hosted Events' : 'Joined Events'}</h1>
+                    <p className="text-muted-foreground mt-1">{isHost ? 'Manage the events you are hosting.' : 'Events you have signed up for.'}</p>
                 </div>
                 {isHost && (
-                    <Button className="bg-indigo-600 hover:bg-indigo-700" asChild>
+                    <Button className="bg-primary hover:bg-primary/90" asChild>
                         <Link href="/events/create">Create New Event</Link>
                     </Button>
                 )}
@@ -109,27 +109,27 @@ export default function MyEventsClient() {
                         <Card key={event._id} className="overflow-hidden hover:shadow-md transition-shadow">
                             <CardContent className="p-0">
                                 <div className="flex flex-col md:flex-row">
-                                    <div className="bg-indigo-50 p-6 flex flex-col justify-center items-center w-full md:w-48 text-center border-b md:border-b-0 md:border-r border-indigo-100">
-                                        <span className="text-2xl font-bold text-indigo-600">{new Date(event.date).getDate()}</span>
-                                        <span className="text-indigo-600 font-medium uppercase text-sm">
+                                    <div className="bg-primary/5 p-6 flex flex-col justify-center items-center w-full md:w-48 text-center border-b md:border-b-0 md:border-r border-border">
+                                        <span className="text-2xl font-bold text-primary">{new Date(event.date).getDate()}</span>
+                                        <span className="text-primary font-medium uppercase text-sm">
                                             {new Date(event.date).toLocaleString('default', { month: 'short' })}
                                         </span>
-                                        <span className="text-gray-500 text-xs mt-1">
+                                        <span className="text-muted-foreground text-xs mt-1">
                                             {new Date(event.date).getFullYear()}
                                         </span>
                                     </div>
                                     <div className="p-6 flex-grow flex flex-col justify-between">
                                         <div>
                                             <div className="flex justify-between items-start mb-2">
-                                                <h3 className="text-xl font-bold text-gray-900">{event.title}</h3>
+                                                <h3 className="text-xl font-bold text-foreground">{event.title}</h3>
                                                 <Badge className={
                                                     event.status === 'open' ? 'bg-green-100 text-green-700 hover:bg-green-100' :
-                                                    event.status === 'full' ? 'bg-orange-100 text-orange-700 hover:bg-orange-100' : 'bg-gray-100 text-gray-700'
+                                                    event.status === 'full' ? 'bg-orange-100 text-orange-700 hover:bg-orange-100' : 'bg-muted text-muted-foreground'
                                                 }>
                                                     {event.status}
                                                 </Badge>
                                             </div>
-                                            <div className="flex flex-wrap gap-4 text-sm text-gray-500 mb-4">
+                                            <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-4">
                                                 <div className="flex items-center">
                                                     <MapPin className="h-4 w-4 mr-1" /> {event.location}
                                                 </div>

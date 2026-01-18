@@ -87,7 +87,7 @@ export default function EditEventClient() {
         }
     };
 
-    if (loading) return <div className="flex justify-center items-center h-screen"><Loader2 className="animate-spin h-8 w-8 text-indigo-600"/></div>;
+    if (loading) return <div className="flex justify-center items-center h-screen"><Loader2 className="animate-spin h-8 w-8 text-primary"/></div>;
 
     return (
         <div className="container mx-auto px-4 py-12 max-w-3xl">
@@ -186,7 +186,7 @@ export default function EditEventClient() {
                             <Button type="button" variant="outline" className="w-1/3" onClick={() => router.push('/my-events')}>
                                 Cancel
                             </Button>
-                            <Button type="submit" className="w-2/3 bg-indigo-600 hover:bg-indigo-700" disabled={isSubmitting}>
+                            <Button type="submit" className="w-2/3 bg-primary hover:bg-primary/90" disabled={isSubmitting}>
                                 {isSubmitting ? "Saving Changes..." : "Update Event"}
                             </Button>
                         </div>

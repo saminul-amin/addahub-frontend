@@ -30,7 +30,7 @@ export default function AboutPage() {
                         We built this platform to bridge that gap. By focusing on *activities* first, we take the pressure off "networking" and let connections happen naturally while doing something you enjoy.
                     </p>
                 </div>
-                <div className="bg-indigo-100 rounded-2xl p-8 aspect-square flex items-center justify-center">
+                <div className="bg-primary/10 rounded-2xl p-8 aspect-square flex items-center justify-center">
                     <Image src={TeamImage} alt="Team Photo" />
                 </div>
             </div>
