@@ -1,4 +1,5 @@
 'use client';
+import GoogleLoginBtn from "@/components/ui/GoogleLoginBtn";
 import { useForm } from 'react-hook-form';
 import { api } from '@/app/lib/api';
 import { useRouter } from 'next/navigation';
@@ -38,7 +39,18 @@ export default function RegisterClient() {
                         Enter your details below to create your account
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="space-y-4">
+                    <GoogleLoginBtn isRegister />
+                    <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                            <span className="w-full border-t" />
+                        </div>
+                        <div className="relative flex justify-center text-xs uppercase">
+                            <span className="bg-background px-2 text-muted-foreground">
+                                Or continue with
+                            </span>
+                        </div>
+                    </div>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div className="space-y-2">
                             <Label htmlFor="name">Full Name</Label>

@@ -2,33 +2,34 @@ import { Metadata, ResolvingMetadata } from 'next';
 import EventDetailsClient from './EventDetailsClient';
 
 type Props = {
-  params: { id: string }
-  searchParams: { [key: string]: string | string[] | undefined }
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export async function generateMetadata(
-  { params, searchParams }: Props,
+  props: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
+  const params = await props.params;
   const id = params.id;
- 
+
   try {
-      const res = await fetch(`https://addahub-backend.vercel.app/api/v1/events/${id}`);
-      const data = await res.json();
-      
-      if (data.success && data.data) {
-          return {
-              title: data.data.title,
-              description: data.data.description?.substring(0, 160) || "Join this event on AddaHub",
-              openGraph: {
-                  title: data.data.title,
-                  description: data.data.description?.substring(0, 160),
-                  images: data.data.image ? [data.data.image] : [],
-              }
-          }
+    const res = await fetch(`https://addahub-backend.vercel.app/api/v1/events/${id}`);
+    const data = await res.json();
+
+    if (data.success && data.data) {
+      return {
+        title: data.data.title,
+        description: data.data.description?.substring(0, 160) || "Join this event on AddaHub",
+        openGraph: {
+          title: data.data.title,
+          description: data.data.description?.substring(0, 160),
+          images: data.data.image ? [data.data.image] : [],
+        }
       }
+    }
   } catch (error) {
-      console.error("Failed to fetch event metadata", error);
+    console.error("Failed to fetch event metadata", error);
   }
 
   return {
@@ -37,5 +38,5 @@ export async function generateMetadata(
 }
 
 export default function EventDetailsPage() {
-    return <EventDetailsClient />;
+  return <EventDetailsClient />;
 }

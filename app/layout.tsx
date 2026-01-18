@@ -28,6 +28,7 @@ import Footer from "./components/Footer";
 import { Toaster } from "@/components/ui/sonner";
 
 import { ThemeProvider } from "@/components/theme-provider";
+import GoogleAuthProviderWrapper from "@/components/GoogleAuthProviderWrapper";
 
 export default function RootLayout({
   children,
@@ -39,19 +40,21 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
-        <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-        <Navbar />
-        <main className="flex-grow pt-16">
-            {children}
-        </main>
-        <Footer />
-        <Toaster />
-        </ThemeProvider>
+        <GoogleAuthProviderWrapper>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navbar />
+            <main className="flex-grow pt-16">
+              {children}
+            </main>
+            <Footer />
+            <Toaster />
+          </ThemeProvider>
+        </GoogleAuthProviderWrapper>
       </body>
     </html>
   );
