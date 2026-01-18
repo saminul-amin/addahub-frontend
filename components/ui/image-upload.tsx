@@ -23,7 +23,7 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
         formData.append('image', file);
 
         try {
-             const response = await fetch('https://addahub-backend.vercel.app/api/upload', {
+             const response = await fetch('https://addahub-backend.vercel.app/api/v1/upload', {
                 method: 'POST',
                 body: formData,
             });

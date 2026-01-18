@@ -24,7 +24,7 @@ export default function MultiImageUpload({ values = [], onChange }: MultiImageUp
 
         try {
             // Reusing the same upload endpoint
-            const response = await fetch('https://addahub-backend.vercel.app/api/upload', {
+            const response = await fetch('https://addahub-backend.vercel.app/api/v1/upload', {
                 method: 'POST',
                 body: formData,
             });

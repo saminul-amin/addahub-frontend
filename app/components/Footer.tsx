@@ -155,11 +155,11 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3 text-muted-foreground text-sm">
                 <Phone className="h-5 w-5 text-primary flex-shrink-0" />
-                <span>+880 1234 567890</span>
+                <span>+880 1326 874247</span>
               </li>
               <li className="flex items-center gap-3 text-muted-foreground text-sm">
                 <Mail className="h-5 w-5 text-primary flex-shrink-0" />
-                <span>support@addahub.com</span>
+                <span>saminul.amin@gmail.com</span>
               </li>
             </ul>
           </div>

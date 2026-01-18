@@ -20,20 +20,20 @@ export default function LoginClient() {
             if (res.data.success) {
                 Cookies.set('accessToken', res.data.data.accessToken);
                 toast.success("Welcome back!", {
-                  description: "You have successfully logged in.",
+                    description: "You have successfully logged in.",
                 });
                 router.push('/dashboard');
             }
         } catch (error: any) {
-             toast.error("Login Failed", {
-                  description: error.response?.data?.message || 'Something went wrong.',
-             });
+            toast.error("Login Failed", {
+                description: error.response?.data?.message || 'Something went wrong.',
+            });
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8">
-             <Card className="w-full max-w-md shadow-lg">
+        <div className="min-h-screen flex items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-8">
+            <Card className="w-full max-w-md shadow-lg">
                 <CardHeader className="space-y-1">
                     <CardTitle className="text-2xl font-bold tracking-tight text-center">Sign in</CardTitle>
                     <CardDescription className="text-center">
@@ -44,10 +44,10 @@ export default function LoginClient() {
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div className="space-y-2">
                             <Label htmlFor="email">Email</Label>
-                            <Input 
-                                id="email" 
-                                type="email" 
-                                placeholder="Enter Your Email" 
+                            <Input
+                                id="email"
+                                type="email"
+                                placeholder="Enter Your Email"
                                 {...register('email', { required: true })}
                             />
                             {errors.email && <span className="text-red-500 text-xs">Email is required</span>}
@@ -59,9 +59,9 @@ export default function LoginClient() {
                                     Forgot password?
                                 </Link>
                             </div>
-                            <Input 
-                                id="password" 
-                                type="password" 
+                            <Input
+                                id="password"
+                                type="password"
                                 {...register('password', { required: true })}
                                 placeholder="Enter Your Password"
                             />
